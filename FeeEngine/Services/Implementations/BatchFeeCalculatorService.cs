@@ -23,9 +23,9 @@ namespace FeeEngine.Services.Implementations
 
                 foreach (var rule in _rules)
                 {
-                    if (rule.IsApplicable(transaction, transaction.ClientAttribute))
+                    if (rule.IsApplicable(transaction))
                     {
-                        var result = rule.CalculateFee(transaction, transaction.ClientAttribute);
+                        var result = rule.CalculateFee(transaction);
                         appliedRules.Add(result);
                         totalFee += result.Fee;
                     }
@@ -33,7 +33,7 @@ namespace FeeEngine.Services.Implementations
 
                
                 var discountRule = _rules.OfType<RuleCreditScoreDiscount>().FirstOrDefault();
-                if (discountRule != null && discountRule.IsApplicable(transaction, transaction.ClientAttribute))
+                if (discountRule != null && discountRule.IsApplicable(transaction))
                 {
                     var discountResult = discountRule.ApplyDiscount(totalFee, transaction);
                     appliedRules.Add(discountResult);

@@ -5,7 +5,7 @@ namespace FeeEngine.Rules
     //посебен интерфејс за дискаунти
     public class RuleCreditScoreDiscount 
     {
-        public bool IsApplicable(Transaction transaction, ClientAttribute client)
+        public bool IsApplicable(Transaction transaction)
         {
 
             return transaction.ClientAttribute.CreditScore > 400;
