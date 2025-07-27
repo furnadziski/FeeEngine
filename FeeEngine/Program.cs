@@ -12,6 +12,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IRule, RulePos>();
 builder.Services.AddScoped<IRule, RuleEcommerce>();
+builder.Services.AddScoped<IDiscountRule, RuleCreditScoreDiscount>();
 builder.Services.AddScoped<IFeeCalculatorService, FeeCalculatorService>();
 builder.Services.AddSingleton<ITransactionHistoryService, TransactionHistoryService>();
 builder.Services.AddScoped<IBatchFeeCalculatorService, BatchFeeCalculatorService>();

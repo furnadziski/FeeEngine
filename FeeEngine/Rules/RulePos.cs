@@ -1,5 +1,6 @@
 ﻿using FeeEngine.Enums;
 using FeeEngine.Models;
+using FeeEngine.Services.Interfaces;
 
 namespace FeeEngine.Rules
 {
@@ -12,7 +13,7 @@ namespace FeeEngine.Rules
         
         public RuleFeeResult CalculateFee(Transaction transaction)
         {
-            decimal fee = transaction.TransactionAttribute.Amount <= 100 ? 0.20m : transaction.TransactionAttribute.Amount * 0.02m;
+            decimal fee = transaction.TransactionAttribute.Amount <= 100 ? 0.2m : transaction.TransactionAttribute.Amount * 0.002m;
 
             return new RuleFeeResult
             {

@@ -1,6 +1,4 @@
 ﻿using FeeEngine.Models;
-using FeeEngine.Rules;
-using FeeEngine.Services.Implementations;
 using FeeEngine.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,7 +22,6 @@ namespace FeeEngine.Controllers
             _batchFeeCalculatorService = batchFeeCalculatorService;
         }
         
-
         [HttpPost("calculate")]
         public IActionResult CalculateFee([FromBody] Transaction transaction)
         {
@@ -33,7 +30,7 @@ namespace FeeEngine.Controllers
             return Ok(result);
         }
 
-        [HttpPost("history")]
+        [HttpGet("history")]
         public IActionResult GetTransactionHistory()
         {
             var history = _transactionHistoryService.GetAll();
@@ -46,7 +43,6 @@ namespace FeeEngine.Controllers
             var results = _batchFeeCalculatorService.CalculateBatch(transactions);
             return Ok(results);
         }
-
     }
 
 }

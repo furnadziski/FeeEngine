@@ -1,10 +1,5 @@
 ﻿using FeeEngine.Models;
-using FeeEngine.Rules;
 using FeeEngine.Services.Interfaces;
-using Nancy;
-using Nancy.Json;
-using Newtonsoft.Json;
-using System.Collections.Generic;
 
 namespace FeeEngine.Services.Implementations
 {
@@ -12,12 +7,13 @@ namespace FeeEngine.Services.Implementations
     {
         private readonly IEnumerable<IRule> _rules;
         private readonly ITransactionHistoryService _transactionHistoryService;
+        private readonly IEnumerable<IDiscountRule> _discountRules;
 
-        public FeeCalculatorService(IEnumerable<IRule> rules,ITransactionHistoryService transactionHistoryService)
+        public FeeCalculatorService(IEnumerable<IRule> rules,ITransactionHistoryService transactionHistoryService, IEnumerable<IDiscountRule> discountRules)
         {
             _rules = rules;
             _transactionHistoryService = transactionHistoryService;
-            
+            _discountRules = discountRules;
         }
 
         public FeeCalculationResult CalculateFee( Transaction transaction)
@@ -28,7 +24,7 @@ namespace FeeEngine.Services.Implementations
 
             foreach (var rule in _rules)
             {
-                if (rule is RuleCreditScoreDiscount) continue;
+               
                 if (rule.IsApplicable(transaction))
                 {
                     var result = rule.CalculateFee(transaction);
@@ -36,12 +32,14 @@ namespace FeeEngine.Services.Implementations
                     totalFee += result.Fee;
                 }
             }
-            var discountRule = _rules.OfType<RuleCreditScoreDiscount>().FirstOrDefault();
-            if (discountRule != null && discountRule.IsApplicable(transaction))
+            foreach (var dRule in _discountRules)
             {
-                var discountResult = discountRule.ApplyDiscount(totalFee, transaction);
-                appliedRules.Add(discountResult);
-                totalFee += discountResult.Fee; // Fee is negative (it's a discount)
+                if (dRule.IsApplicable(transaction))
+                {
+                    var discountResult = dRule.ApplyDiscount(totalFee, transaction);
+                    appliedRules.Add(discountResult);
+                    totalFee += discountResult.Fee;
+                }
             }
 
             _transactionHistoryService.Save(new TransactionHistory

@@ -1,6 +1,6 @@
 ﻿using FeeEngine.Enums;
 using FeeEngine.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
+using FeeEngine.Services.Interfaces;
 
 namespace FeeEngine.Rules
 {
@@ -12,7 +12,7 @@ namespace FeeEngine.Rules
         }
         public RuleFeeResult CalculateFee(Transaction transaction)
         {
-            decimal rate = 0.18m;
+            decimal rate = 0.018m;
             decimal addOns = 0.15m;
             decimal initialFee = transaction.TransactionAttribute.Amount * rate + addOns;
             decimal fee = initialFee > 120 ? 120m : initialFee;
@@ -21,7 +21,7 @@ namespace FeeEngine.Rules
             {
                 RuleName = transaction.TransactionAttribute.Type.ToString(),
                 Fee = fee,
-                Description = transaction.TransactionAttribute.Amount >120? "Maximum fee of 120":"0.18% of amount + 0.15"
+                Description = transaction.TransactionAttribute.Amount >120? "Maximum fee of 120":"1.8% of amount + 0.15"
             };
         }
     }
